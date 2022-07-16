@@ -13,11 +13,11 @@
     :modules="modules"
     class="swiper-container"
   >
-    <swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
-    ><swiper-slide>Slide 3</swiper-slide><swiper-slide>Slide 4</swiper-slide
-    ><swiper-slide>Slide 5</swiper-slide><swiper-slide>Slide 6</swiper-slide
-    ><swiper-slide>Slide 7</swiper-slide><swiper-slide>Slide 8</swiper-slide
-    ><swiper-slide>Slide 9</swiper-slide>
+    <swiper-slide>
+      <div class="img">
+        <img :src="poster" alt="상세이미지" >
+      </div>
+    </swiper-slide>
   </swiper>
 
 </template>
@@ -27,15 +27,29 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
 import "swiper/css/bundle";
-// import "swiper/css/pagination";
 
 // import required modules
 import { Autoplay, Pagination } from "swiper";
 
 export default {
+  data(){
+    return {
+      poster: ''
+    }
+  },
   components: {
     Swiper,
     SwiperSlide,
+  },
+  methods: {
+    async getPoster(){
+      await this.$store.dispatch('show/searchShow')
+      this.poster = this.$store.state.show.poster
+      console.log('불러와짐',this.poster)
+    }
+  },
+  created(){
+    this.getPoster()
   },
   setup() {
     return {
@@ -50,6 +64,14 @@ $width: 550px;
 .swiper-container {
   width: 20vw;
   height: 90vh;
+  .img {
+    img{
+      width: 300px;
+      /* object-fit: cover;s */
+      /* background-size: cover; */
+      
+    }
+  }
 }
 
 </style>

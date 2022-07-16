@@ -18,11 +18,20 @@ export default {
   state: () => {
     return {
       showDetail: {},
+      poster: '',
     }
   },
   mutations: {
     putInfo(state, payload) {
       state.showDetail = payload
+    },
+    putPoster(state, payload) {
+      state.poster = payload
+    },
+    setState(state, payload) {
+      for (const key in payload) {
+        state[key] = payload[key]
+      }
     },
   },
   actions: {
@@ -36,25 +45,17 @@ export default {
     },
     async searchShow({ commit, dispatch }) {
       const { data } = await axios({
-        url: `https://asia-northeast3-heropy-api.cloudfunctions.net/api/products/W8efPC45IvQwtpgSSrHL`,
+        url: `https://asia-northeast3-heropy-api.cloudfunctions.net/api/products/EmoE4S9TlLnB3XHdQh7X`,
         method: 'GET',
         headers,
       })
-      // console.log(data)
-      // commit('putInfo')
-      const detail = data.title.split(/\/|@/)
-      // console.log(detail)
-      const detail2 = data.description.split('@')
-      // console.log(detail2)
-      const detail3 = [...detail, ...detail2]
-      // console.log(detail3)
-      commit('putInfo', detail3)
-      // console.log('show type', typeof show)
-    },
-    splitDetail(data) {
-      // for (let i = 0; i< detail.length; i += 1) {
-      //   this.show[i] = detail[i]
-      // }
+      console.log(data)
+      const title = data.title.split(/\/|@/)
+      const description = data.description.split('@')
+      const showDetail = [...title, ...description]
+      commit('setState', { showDetail })
+      const poster = data.photo
+      commit('setState', { poster })
     },
   },
 }
