@@ -9,13 +9,12 @@
     :pagination="{
       clickable: true,
     }"
-    
     :modules="modules"
     class="swiper-container"
   >
     <swiper-slide>
       <div class="img">
-        <img :src="poster" alt="상세이미지" >
+        <img :src="poster" alt="상세이미지" class="poster">
       </div>
     </swiper-slide>
   </swiper>
@@ -46,10 +45,30 @@ export default {
       await this.$store.dispatch('show/searchShow')
       this.poster = this.$store.state.show.poster
       console.log('불러와짐',this.poster)
+    },
+    //자동 스크롤
+    scrollTable() {
+      const wrapper = document.querySelector(".img");
+      console.log('스크롤')
+      setInterval(() => {
+        wrapper.scrollTop = wrapper.scrollTop + 1;
+             // console.log(wrapper.scrollTop)
+          // console.log('scrollHeight',wrapper.scrollHeight)
+          // console.log('offsetHeight',wrapper.offsetHeight)
+        if (wrapper.offsetHeight + wrapper.scrollTop >= wrapper.scrollHeight) {
+          wrapper.scrollTop = 0;
+        }
+      }, 100);
     }
+          // console.log(wrapper.scrollTop)
+          // console.log('scrollHeight',wrapper.scrollHeight)
+          // console.log('offsetHeight',wrapper.offsetHeight)
   },
   created(){
     this.getPoster()
+  },
+  mounted(){
+    this.scrollTable()
   },
   setup() {
     return {
@@ -59,19 +78,26 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $width: 550px;
 .swiper-container {
-  width: 20vw;
+  width: 30vw;
   height: 90vh;
-  .img {
+  .img{
+    height: inherit;
+    overflow-y: scroll;
+    scroll-behavior:smooth;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    .img::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+    }
     img{
-      width: 300px;
-      /* object-fit: cover;s */
-      /* background-size: cover; */
-      
+      display: block;
+      width: 100%;
     }
   }
+  
 }
 
 </style>
