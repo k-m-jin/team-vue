@@ -1,24 +1,9 @@
 <template>
- <swiper
-    :spaceBetween="30"
-    :centeredSlides="true"
-    :autoplay="{
-      delay: 2500,
-      disableOnInteraction: false,
-    }"
-    :pagination="{
-      clickable: true,
-    }"
-    :modules="modules"
-    class="swiper-container"
-  >
-    <swiper-slide>
+    <div class="container">
       <div class="img">
         <img :src="poster" alt="상세이미지" class="poster">
       </div>
-    </swiper-slide>
-  </swiper>
-
+    </div>
 </template>
 
 <script>
@@ -28,7 +13,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css/bundle";
 
 // import required modules
-import { Autoplay, Pagination } from "swiper";
+import { Autoplay} from "swiper";
 
 export default {
   data(){
@@ -44,57 +29,69 @@ export default {
     async getPoster(){
       await this.$store.dispatch('show/searchShow')
       this.poster = this.$store.state.show.poster
-      console.log('불러와짐',this.poster)
     },
-    //자동 스크롤
-    scrollTable() {
-      const wrapper = document.querySelector(".img");
-      console.log('스크롤')
-      setInterval(() => {
-        wrapper.scrollTop = wrapper.scrollTop + 1;
-             // console.log(wrapper.scrollTop)
-          // console.log('scrollHeight',wrapper.scrollHeight)
-          // console.log('offsetHeight',wrapper.offsetHeight)
-        if (wrapper.offsetHeight + wrapper.scrollTop >= wrapper.scrollHeight) {
-          wrapper.scrollTop = 0;
-        }
-      }, 100);
-    }
-          // console.log(wrapper.scrollTop)
-          // console.log('scrollHeight',wrapper.scrollHeight)
-          // console.log('offsetHeight',wrapper.offsetHeight)
   },
   created(){
     this.getPoster()
   },
-  mounted(){
-    this.scrollTable()
-  },
   setup() {
     return {
-      modules: [Autoplay, Pagination, ],
+      modules: [Autoplay ],
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-$width: 550px;
-.swiper-container {
+@-webkit-keyframes slide {
+  0% {
+    transform:translateY(0);
+  }
+  100% {
+   transform:translateY(-70%);
+  }
+  /* 100% {
+   transform:translateY(0);
+  } */
+}
+@keyframes slide {
+  0% {
+    transform:translateY(0);
+  }
+  100% {
+    transform:translateY(-70%);
+  }
+  /* 100% {
+   transform:translateY(0);
+  } */
+}
+
+.container {
   width: 30vw;
   height: 90vh;
   .img{
+    border-radius: 4px;
     height: inherit;
+    scrollbar-width: none;
     overflow-y: scroll;
     scroll-behavior:smooth;
     -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;
-    .img::-webkit-scrollbar {
+    
+    &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+    
     }
     img{
       display: block;
       width: 100%;
+      animation: slide 30s infinite linear;
+      animation-fill-mode: forwards;
+      animation-delay: 2s;
+
+      &:hover {
+        animation-play-state: paused;
+        -webkit-animation-play-state: paused;
+      }
     }
   }
   
