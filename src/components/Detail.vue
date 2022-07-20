@@ -1,4 +1,6 @@
 <template>
+<div class="box">
+
   <button @click="searchShows">목록조회</button>
   <button @click="searchShow">상세조회</button>
     <swiper
@@ -13,40 +15,27 @@
     :modules="modules"
     class="swiper-container"
   >
-    <!-- <swiper-slide class="swiper-slide">Slide 1</swiper-slide>
-    <swiper-slide class="swiper-slide">Slide 2</swiper-slide>
-    <swiper-slide class="swiper-slide">Slide 3</swiper-slide> -->
-    <swiper-slide class="swiper-slide" v-for="(item, i) in detail" :key="i" >
-    {{item}}
+    <swiper-slide class="swiper-slide" v-for="(detail, key) in details" :key="key">
+    <div class="detail-info" >{{key}}</div>
+    <div class="detail">{{detail}}</div>
     </swiper-slide>
-   
-  
   </swiper>
-    <!-- <div v-for="i in show" :key="i">
-    {{i[i]}} -->
-      <!-- <swiper-slide class="swiper-slide">{{i}}</swiper-slide> -->
-    <!-- </div> -->
+      </div>
   
-  <!-- <div>{{show}}</div> -->
 </template>
 
 <script>
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
-
 // Import Swiper styles
 import "swiper/css/bundle";
-
-import "swiper/css/navigation";
-
-
 // import required modules
-import { Autoplay,Navigation,Pagination } from "swiper";
+import { Autoplay,Pagination } from "swiper";
 
 export default {
   data(){
     return {
-      detail : {}
+      details : {}
     }
   },
   methods: {
@@ -55,35 +44,51 @@ export default {
     },
     async searchShow() {
       await this.$store.dispatch('show/searchShow')
-      this.detail = this.$store.state.show.showDetail
-      console.log(this.detail)
-    }
+      this.details = this.$store.state.show.detailData
+      Object.entries(this.details).map( ([key,value]) => {
+        if(!value.trim()) {
+          delete this.details[key]
+        }
+      })
+      
+      console.log('정보',this.details)
+    },
   },
   components: {
     Swiper,
     SwiperSlide,
   },
+  created(){
+    this.searchShow()
+  },
   setup() {
     return {
-      modules: [Autoplay,Navigation,Pagination],
+      modules: [Autoplay,Pagination],
     };
   },
 };
 
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
 .swiper-container {
-  width: 20vw;
-  height: 90vh;
-  /* background-color: olivedrab; */
+  width: 30vw;
+  height:200px;
   .swiper-slide {
     width: 100%;
     display: flex;
+    flex-direction: column;
     /* background-color: orange; */
     justify-content: center;
     align-items: center;
+    .detail-info{
+      font-size: 1rem;
+    }
+    .detail{
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin: 1rem;
+    }
   }
 }
 
