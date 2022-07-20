@@ -1,28 +1,24 @@
 <template>
    <el-card class="box-card">
-    <div class="calender-box">
-      <el-calendar class="calender" v-model="value">
-      <template #dateCell="{ data }" class="calender">
-      <p :class="data.isSelected ? 'is-selected' : ''" style="margin:0;">
-        {{ data.day.split('-').slice(2,3).join('-') }}
-        {{ data.isSelected ? '✔️' : '' }}
-      </p>
-    </template>
-      </el-calendar>
+    <div class="calender-box">      
+    <el-calendar :range="[new Date(startDate[0], startDate[1]-1, startDate[2]), new Date(endDate[0], endDate[1]-1, endDate[2])]" />
     </div>
-
-  <div class="price">{{price}}</div>
-  <div class="date">{{startDate}}</div>
-  <div class="date">{{endDate}}</div>
+    <div class="price">가격 : {{price}}</div>
+    <div class="date">{{startDate}}</div>
+    <div class="date">{{endDate}}</div>
+    <el-button>결제하기</el-button>
   </el-card>
 </template>
 <script>
-import { ref } from 'vue'
+
 export default {
   data(){
     return {
-      startDate :'',
-      endDate :''
+      startDate :[],
+      endDate :[],
+      selectDate :(val) => {
+        calendar.value.selectDate(val)
+      },
     }
   },
   computed:{
@@ -31,14 +27,14 @@ export default {
     }
   },
    created(){
-    const value = ref(new Date())
     this.getDate()
    },
    methods:{
     async getDate(){
       await this.$store.dispatch('show/searchShow')
-      this.startDate = this.$store.state.show.showDetail[1]
-      this.endDate = this.$store.state.show.showDetail[2]
+      this.startDate = this.$store.state.show.detailData['공연 시작일'].split('.')
+      this.endDate = this.$store.state.show.detailData['공연 종료일'].split('.')
+  
     }
    }
    
@@ -60,7 +56,6 @@ export default {
     width: inherit;
     height: 400px;
     --el-calendar-cell-width: 30px; 
-    font-size: small;  
      }
   }
   .date{
